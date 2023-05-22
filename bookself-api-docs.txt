@@ -1,0 +1,11 @@
+to create book method:POST /books
+to get all books method:GET /books
+to update one book by id method:PUT /books/{id}
+to get books by id method: GET /books/{id}
+to delete one book by id method:DELETE /books/{id}
+
+to get all reading books method:GET /books?reading=1
+to get all unread books method:GET /books?reading=0
+to get all finished books method:GET /books?finished=1
+to get all unfinished books method:GET /books?finished=0
+to find books by name,author,date,summary,publisher,year method: GET /find-books?find={your query}

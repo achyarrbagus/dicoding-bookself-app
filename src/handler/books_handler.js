@@ -52,7 +52,7 @@ const addBookHandler = (request, h) => {
 
 const getAllBooksHandler = (request, h) => {
   const { reading, finished } = request.query;
-  if (reading > 0) {
+  if (parseInt(reading) > 0) {
     let data = books.filter((item) => {
       const isRead = item.reading == true;
       return isRead;
@@ -70,7 +70,7 @@ const getAllBooksHandler = (request, h) => {
     });
     response.code(200);
     return response;
-  } else if (finished > 0) {
+  } else if (parseInt(finished) > 0) {
     let data = books.filter((item) => {
       const isRead = item.finished == true;
       return isRead;
@@ -224,26 +224,18 @@ const deleteBookByIdHandler = (request, h) => {
 };
 
 const findBook = (request, h) => {
-  const { name, year, author, summary, publisher } = request.query;
+  const { find } = request.query;
   const filterBook = books.filter((item) => {
-    if (name) {
-      const titleMatch = item?.name && item?.name.toLowerCase().includes(name.toLowerCase());
-      return titleMatch;
-    } else if (year) {
-      const yearMacth = item.year.toString() === year;
-      return yearMacth;
-    } else if (author) {
-      const authorMacth = item?.author && item?.author.toLowerCase().includes(author.toLowerCase());
-      return authorMacth;
-    } else if (summary) {
-      const summaryMacth = item?.summary && item?.summary.toLowerCase().includes(summary.toLowerCase());
-      return summaryMacth;
-    } else {
-      const publisherMacth = item?.publisher && item?.publisher.toLowerCase().includes(publisher.toLowerCase());
-      return publisherMacth;
-    }
+    const titleMatch = item?.name && item.name.toLowerCase().includes(find.toLowerCase());
+    const yearMatch = item.year.toString() === find;
+    const authorMatch = item?.author && item.author.toLowerCase().includes(find.toLowerCase());
+    const summaryMatch = item?.summary && item.summary.toLowerCase().includes(find.toLowerCase());
+    const publisherMatch = item?.publisher && item.publisher.toLowerCase().includes(find.toLowerCase());
+
+    return titleMatch || yearMatch || authorMatch || summaryMatch || publisherMatch;
   });
-  if (filterBook.length != 0) {
+
+  if (filterBook.length !== 0) {
     const response = h.response({
       status: "success",
       message: "Buku berhasil ditemukan",
@@ -252,6 +244,7 @@ const findBook = (request, h) => {
     response.code(200);
     return response;
   }
+
   const response = h.response({
     status: "fail",
     message: "Buku tidak ditemukan",
